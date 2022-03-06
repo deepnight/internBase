@@ -10,6 +10,7 @@ class Entity {
 	public var destroyed(default,null) = false;
 	public var ftime(get,never) : Float; inline function get_ftime() return game.ftime;
 	public var camera(get,never) : Camera; inline function get_camera() return game.camera;
+	public var gameFeelFx(get,never) : Bool; inline function get_gameFeelFx() return game.gameFeelFx;
 
 	var tmod(get,never) : Float; inline function get_tmod() return Game.ME.tmod;
 	var utmod(get,never) : Float; inline function get_utmod() return Game.ME.utmod;
@@ -192,9 +193,9 @@ class Entity {
 		inline function get_screenAttachY() return game!=null && !game.destroyed ? sprY*Const.SCALE + game.scroller.y : sprY*Const.SCALE;
 
 	/** attachX value during last frame **/
-	public var prevFrameattachX(default,null) : Float = -Const.INFINITE;
+	public var prevFrameAttachX(default,null) : Float = -Const.INFINITE;
 	/** attachY value during last frame **/
-	public var prevFrameattachY(default,null) : Float = -Const.INFINITE;
+	public var prevFrameAttachY(default,null) : Float = -Const.INFINITE;
 
 	var actions : Array<{ id:String, cb:Void->Void, t:Float }> = [];
 
@@ -278,7 +279,7 @@ class Entity {
 		cy = y;
 		xr = 0.5;
 		yr = 1;
-		onPosManuallyChanged();
+		onPosManuallyChangedBoth();
 	}
 
 	/** Move entity to pixel coordinates **/
@@ -287,16 +288,31 @@ class Entity {
 		cy = Std.int(y/Const.GRID);
 		xr = (x-cx*Const.GRID)/Const.GRID;
 		yr = (y-cy*Const.GRID)/Const.GRID;
-		onPosManuallyChanged();
+		onPosManuallyChangedBoth();
 	}
 
-	/** Should be called when you manually modify entity coordinates **/
-	function onPosManuallyChanged() {
-		if( M.dist(attachX,attachY,prevFrameattachX,prevFrameattachY) > Const.GRID*2 ) {
-			prevFrameattachX = attachX;
-			prevFrameattachY = attachY;
+	/** Should be called when you manually modify both X & Y entity coordinates **/
+	function onPosManuallyChangedBoth() {
+		if( M.dist(attachX,attachY,prevFrameAttachX,prevFrameAttachY) > Const.GRID*2 ) {
+			prevFrameAttachX = attachX;
+			prevFrameAttachY = attachY;
+			hud.notify("recal");
 		}
 		updateLastFixedUpdatePos();
+	}
+
+	/** Should be called when you manually modify entity X coordinate **/
+	function onPosManuallyChangedX() {
+		if( M.fabs(attachX-prevFrameAttachX) > Const.GRID*2 )
+			prevFrameAttachX = attachX;
+		lastFixedUpdateX = attachX;
+	}
+
+	/** Should be called when you manually modify entity Y coordinate **/
+	function onPosManuallyChangedY() {
+		if( M.fabs(attachY-prevFrameAttachY) > Const.GRID*2 )
+			prevFrameAttachY = attachY;
+		lastFixedUpdateY = attachY;
 	}
 
 	/** Quickly set X/Y pivots. If Y is omitted, it will be equal to X. **/
@@ -416,7 +432,6 @@ class Entity {
 
 	/** Print some value below entity **/
 	public inline function debug(?v:Dynamic, ?c=0xffffff) {
-		#if debug
 		if( v==null && debugLabel!=null ) {
 			debugLabel.remove();
 			debugLabel = null;
@@ -429,7 +444,6 @@ class Entity {
 			debugLabel.text = Std.string(v);
 			debugLabel.textColor = c;
 		}
-		#end
 	}
 
 	/** Hide entity debug bounds **/
@@ -628,7 +642,6 @@ class Entity {
 		updateActions();
 
 
-		#if debug
 		// Display the list of active "affects" (with `/set affect` in console)
 		if( ui.Console.ME.hasFlag("affect") ) {
 			var all = [];
@@ -644,8 +657,6 @@ class Entity {
 		// Hide bounds
 		if( !ui.Console.ME.hasFlag("bounds") && debugBounds!=null )
 			disableDebugBounds();
-		#end
-
     }
 
 	/**
@@ -700,8 +711,8 @@ class Entity {
 		Loop that runs at the absolute end of the frame
 	**/
 	public function finalUpdate() {
-		prevFrameattachX = attachX;
-		prevFrameattachY = attachY;
+		prevFrameAttachX = attachX;
+		prevFrameAttachY = attachY;
 	}
 
 

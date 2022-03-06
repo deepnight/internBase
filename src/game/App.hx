@@ -155,7 +155,7 @@ class App extends dn.Process {
 		#end
 
 		// Heaps resource management
-		#if( hl && debug )
+		#if hl
 			hxd.Res.initLocal();
 			hxd.res.Resource.LIVE_UPDATE = true;
         #else
@@ -201,18 +201,17 @@ class App extends dn.Process {
 		controller.bindKeyboardAsStick(MoveX,MoveY, K.UP, K.LEFT, K.DOWN, K.RIGHT);
 		controller.bindKeyboard(Jump, K.SPACE);
 		controller.bindKeyboard(Restart, K.R);
-		controller.bindKeyboard(ScreenshotMode, K.F9);
 		controller.bindKeyboard(Pause, K.P);
 		controller.bindKeyboard(Pause, K.PAUSE_BREAK);
 		controller.bindKeyboard(MenuCancel, K.ESCAPE);
 
 		// Debug controls
-		#if debug
 		controller.bindPad(DebugTurbo, LT);
 		controller.bindPad(DebugSlowMo, LB);
+		controller.bindKeyboard(ToggleGameFeel, K.G);
+		controller.bindKeyboard(ScreenshotMode, K.F9);
 		controller.bindKeyboard(DebugTurbo, [K.END, K.NUMPAD_ADD]);
-		controller.bindKeyboard(DebugSlowMo, [K.HOME, K.NUMPAD_SUB]);
-		#end
+		controller.bindKeyboard(DebugSlowMo, [K.HOME, K.NUMPAD_SUB, K.ENTER]);
 
 		ca = controller.createAccess();
 		ca.lockCondition = ()->return destroyed || anyInputHasFocus();

@@ -11,6 +11,7 @@ class Assets {
 
 	/** Main atlas **/
 	public static var tiles : SpriteLib;
+	public static var hero : SpriteLib;
 
 	/** LDtk world data **/
 	public static var worldData : World;
@@ -27,9 +28,9 @@ class Assets {
 
 		// build sprite atlas directly from Aseprite file
 		tiles = dn.heaps.assets.Aseprite.convertToSLib(Const.FPS, hxd.Res.atlas.tiles.toAseprite());
+		hero = dn.heaps.assets.Aseprite.convertToSLib(Const.FPS, hxd.Res.atlas.player.toAseprite());
 
 		// CastleDB file hot reloading
-		#if debug
 		hxd.Res.data.watch(function() {
 			// Only reload actual updated file from disk after a short delay, to avoid reading a file being written
 			App.ME.delayer.cancelById("cdb");
@@ -40,7 +41,6 @@ class Assets {
 					Game.ME.onDbReload();
 			}, 0.2);
 		});
-		#end
 
 		// Parse castleDB JSON
 		CastleDb.load( hxd.Res.data.entry.getText() );
@@ -61,7 +61,6 @@ class Assets {
 		worldData = new World();
 
 		// LDtk file hot-reloading
-		#if debug
 		var res = try hxd.Res.load(worldData.projectFilePath.substr(4)) catch(_) null; // assume the LDtk file is in "res/" subfolder
 		if( res!=null )
 			res.watch( ()->{
@@ -73,7 +72,6 @@ class Assets {
 						Game.ME.onLdtkReload();
 				}, 0.2);
 			});
-		#end
 	}
 
 
@@ -86,6 +84,7 @@ class Assets {
 			tmod = 0;
 
 		tiles.tmod = tmod;
+		hero.tmod = tmod;
 		// <-- add other atlas TMOD updates here
 	}
 

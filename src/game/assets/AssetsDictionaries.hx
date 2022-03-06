@@ -12,4 +12,5 @@ package assets;
 **/
 class AssetsDictionaries {
 	public static var tiles = dn.heaps.assets.Aseprite.getDict( hxd.Res.atlas.tiles );
+	public static var hero = dn.heaps.assets.Aseprite.getDict( hxd.Res.atlas.player );
 }

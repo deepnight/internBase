@@ -78,16 +78,13 @@ class Fx extends dn.Process {
 	}
 
 	public function markerEntity(e:Entity, ?c=0xFF00FF, ?short=false) {
-		#if debug
 		if( e==null )
 			return;
 
 		markerCase(e.cx, e.cy, short?0.03:3, c);
-		#end
 	}
 
 	public function markerCase(cx:Int, cy:Int, ?sec=3.0, ?c=0xFF00FF) {
-		#if debug
 		var p = allocTopAdd(getTile(D.tiles.fxCircle15), (cx+0.5)*Const.GRID, (cy+0.5)*Const.GRID);
 		p.setFadeS(1, 0, 0.06);
 		p.colorize(c);
@@ -98,22 +95,18 @@ class Fx extends dn.Process {
 		p.colorize(c);
 		p.setScale(2);
 		p.lifeS = sec;
-		#end
 	}
 
 	public function markerFree(x:Float, y:Float, ?sec=3.0, ?c=0xFF00FF) {
-		#if debug
 		var p = allocTopAdd(getTile(D.tiles.fxDot), x,y);
 		p.setCenterRatio(0.5,0.5);
 		p.setFadeS(1, 0, 0.06);
 		p.colorize(c);
 		p.setScale(3);
 		p.lifeS = sec;
-		#end
 	}
 
 	public function markerText(cx:Int, cy:Int, txt:String, ?t=1.0) {
-		#if debug
 		var tf = new h2d.Text(Assets.fontPixel, topNormalSb);
 		tf.text = txt;
 
@@ -125,7 +118,6 @@ class Fx extends dn.Process {
 		p.onKill = tf.remove;
 
 		tf.setPosition(p.x-tf.textWidth*0.5, p.y-tf.textHeight*0.5);
-		#end
 	}
 
 	inline function collides(p:HParticle, offX=0., offY=0.) {

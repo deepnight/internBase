@@ -27,6 +27,8 @@ class Game extends Process {
 	var curGameSpeed = 1.0;
 	var slowMos : Map<String, { id:String, t:Float, f:Float }> = new Map();
 
+	public var gameFeelFx = true;
+
 
 	public function new() {
 		super(App.ME);
@@ -223,10 +225,14 @@ class Game extends Process {
 			#end
 
 			// Attach debug drone (CTRL-SHIFT-D)
-			#if debug
 			if( ca.isKeyboardPressed(K.D) && ca.isKeyboardDown(K.CTRL) && ca.isKeyboardDown(K.SHIFT) )
 				new DebugDrone(); // <-- HERE: provide an Entity as argument to attach Drone near it
-			#end
+
+			// Game feel fx
+			if( ca.isPressed(ToggleGameFeel) ) {
+				gameFeelFx = !gameFeelFx;
+				hud.notify("Game feel fx: "+(gameFeelFx?"ON":"off"));
+			}
 
 			// Restart whole game
 			if( ca.isPressed(Restart) )
