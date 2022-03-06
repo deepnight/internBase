@@ -82,7 +82,7 @@ class SamplePlayer extends Entity {
 		if( yr>1 && level.hasCollision(cx,cy+1) ) {
 			var heiPow = M.fclamp( ( cy+yr - minFallY ) / 5, 0, 1 ) ;
 			if( gameFeelFx )
-				setSquashY(0.9 - 0.5*heiPow);
+				setSquashY(0.9 - 0.4*heiPow);
 			dy = 0;
 			yr = 1;
 			ca.rumble(0.2, 0.06);
