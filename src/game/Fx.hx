@@ -16,22 +16,22 @@ class Fx extends dn.Process {
 	public function new() {
 		super(Game.ME);
 
-		pool = new ParticlePool(Assets.tiles.tile, 2048, Const.FPS);
+		pool = new ParticlePool(Assets.gameTiles.tile, 2048, Const.FPS);
 
-		bgAddSb = new h2d.SpriteBatch(Assets.tiles.tile);
+		bgAddSb = new h2d.SpriteBatch(Assets.gameTiles.tile);
 		game.scroller.add(bgAddSb, Const.DP_FX_BG);
 		bgAddSb.blendMode = Add;
 		bgAddSb.hasRotationScale = true;
 
-		bgNormalSb = new h2d.SpriteBatch(Assets.tiles.tile);
+		bgNormalSb = new h2d.SpriteBatch(Assets.gameTiles.tile);
 		game.scroller.add(bgNormalSb, Const.DP_FX_BG);
 		bgNormalSb.hasRotationScale = true;
 
-		topNormalSb = new h2d.SpriteBatch(Assets.tiles.tile);
+		topNormalSb = new h2d.SpriteBatch(Assets.gameTiles.tile);
 		game.scroller.add(topNormalSb, Const.DP_FX_FRONT);
 		topNormalSb.hasRotationScale = true;
 
-		topAddSb = new h2d.SpriteBatch(Assets.tiles.tile);
+		topAddSb = new h2d.SpriteBatch(Assets.gameTiles.tile);
 		game.scroller.add(topAddSb, Const.DP_FX_FRONT);
 		topAddSb.blendMode = Add;
 		topAddSb.hasRotationScale = true;
@@ -74,7 +74,7 @@ class Fx extends dn.Process {
 
 	/** Gets a random tile variation from the atlas **/
 	public inline function getTile(id:String) : h2d.Tile {
-		return Assets.tiles.getTileRandom(id);
+		return Assets.gameTiles.getTileRandom(id);
 	}
 
 	public function markerEntity(e:Entity, ?c=0xFF00FF, ?short=false) {
@@ -85,12 +85,12 @@ class Fx extends dn.Process {
 	}
 
 	public function markerCase(cx:Int, cy:Int, ?sec=3.0, ?c=0xFF00FF) {
-		var p = allocTopAdd(getTile(D.tiles.fxCircle15), (cx+0.5)*Const.GRID, (cy+0.5)*Const.GRID);
+		var p = allocTopAdd(getTile(D.gameTiles.fxCircle15), (cx+0.5)*Const.GRID, (cy+0.5)*Const.GRID);
 		p.setFadeS(1, 0, 0.06);
 		p.colorize(c);
 		p.lifeS = sec;
 
-		var p = allocTopAdd(getTile(D.tiles.pixel), (cx+0.5)*Const.GRID, (cy+0.5)*Const.GRID);
+		var p = allocTopAdd(getTile(D.gameTiles.pixel), (cx+0.5)*Const.GRID, (cy+0.5)*Const.GRID);
 		p.setFadeS(1, 0, 0.06);
 		p.colorize(c);
 		p.setScale(2);
@@ -98,7 +98,7 @@ class Fx extends dn.Process {
 	}
 
 	public function markerFree(x:Float, y:Float, ?sec=3.0, ?c=0xFF00FF) {
-		var p = allocTopAdd(getTile(D.tiles.fxDot), x,y);
+		var p = allocTopAdd(getTile(D.gameTiles.fxDot), x,y);
 		p.setCenterRatio(0.5,0.5);
 		p.setFadeS(1, 0, 0.06);
 		p.colorize(c);
@@ -110,7 +110,7 @@ class Fx extends dn.Process {
 		var tf = new h2d.Text(Assets.fontPixel, topNormalSb);
 		tf.text = txt;
 
-		var p = allocTopAdd(getTile(D.tiles.fxCircle15), (cx+0.5)*Const.GRID, (cy+0.5)*Const.GRID);
+		var p = allocTopAdd(getTile(D.gameTiles.fxCircle15), (cx+0.5)*Const.GRID, (cy+0.5)*Const.GRID);
 		p.colorize(0x0080FF);
 		p.alpha = 0.6;
 		p.lifeS = 0.3;
@@ -143,7 +143,7 @@ class Fx extends dn.Process {
 	**/
 	public function dotsExplosionExample(x:Float, y:Float, color:UInt) {
 		for(i in 0...80) {
-			var p = allocTopAdd( getTile(D.tiles.fxDot), x+rnd(0,3,true), y+rnd(0,3,true) );
+			var p = allocTopAdd( getTile(D.gameTiles.fxDot), x+rnd(0,3,true), y+rnd(0,3,true) );
 			p.alpha = rnd(0.4,1);
 			p.colorAnimS(color, 0x762087, rnd(0.6, 3)); // fade particle color from given color to some purple
 			p.moveAwayFrom(x,y, rnd(1,3)); // move away from source

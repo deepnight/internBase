@@ -182,7 +182,7 @@ class Game extends Process {
 		// Update slow-motions
 		updateSlowMos();
 		baseTimeMul = ( 0.2 + 0.8*curGameSpeed ) * ( ucd.has("stopFrame") ? 0.3 : 1 );
-		Assets.tiles.tmod = tmod;
+		Assets.gameTiles.tmod = tmod;
 
 		// Entities post-updates
 		for(e in Entity.ALL) if( !e.destroyed ) e.postUpdate();

@@ -15,7 +15,6 @@ class Level extends dn.Process {
 	public var pxHei(get,never) : Int; inline function get_pxHei() return cHei*Const.GRID;
 
 	public var data : World_Level;
-	var tilesetSource : h2d.Tile;
 
 	var marks : Map< LevelMark, Map<Int,Bool> > = new Map();
 	var invalidated = true;
@@ -25,13 +24,11 @@ class Level extends dn.Process {
 
 		createRootInLayers(Game.ME.scroller, Const.DP_BG);
 		data = ldtkLevel;
-		tilesetSource = hxd.Res.levels.sampleWorldTiles.toAseprite().toTile();
 	}
 
 	override function onDispose() {
 		super.onDispose();
 		data = null;
-		tilesetSource = null;
 		marks = null;
 	}
 
@@ -76,7 +73,8 @@ class Level extends dn.Process {
 		// Placeholder level render
 		root.removeChildren();
 
-		var tg = new h2d.TileGroup(tilesetSource, root);
+		var t = Assets.worldData.all_tilesets.Tiles.getAtlasTile();
+		var tg = new h2d.TileGroup(t, root);
 
 		var layer = data.l_Collisions;
 		for( autoTile in layer.autoTiles ) {

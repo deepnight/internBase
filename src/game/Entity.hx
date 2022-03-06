@@ -209,7 +209,7 @@ class Entity {
         setPosCase(x,y);
 		initLife(1);
 
-        spr = new HSprite(Assets.tiles);
+        spr = new HSprite(Assets.gameTiles);
 		Game.ME.scroller.add(spr, Const.DP_MAIN);
 		spr.colorAdd = new h3d.Vector();
 		baseColor = new h3d.Vector();
@@ -296,7 +296,6 @@ class Entity {
 		if( M.dist(attachX,attachY,prevFrameAttachX,prevFrameAttachY) > Const.GRID*2 ) {
 			prevFrameAttachX = attachX;
 			prevFrameAttachY = attachY;
-			hud.notify("recal");
 		}
 		updateLastFixedUpdatePos();
 	}

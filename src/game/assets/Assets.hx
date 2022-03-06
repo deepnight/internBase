@@ -10,7 +10,7 @@ class Assets {
 	public static var fontPixel : h2d.Font;
 
 	/** Main atlas **/
-	public static var tiles : SpriteLib;
+	public static var gameTiles : SpriteLib;
 	public static var hero : SpriteLib;
 
 	/** LDtk world data **/
@@ -27,7 +27,7 @@ class Assets {
 		fontPixel = new hxd.res.BitmapFont( hxd.Res.fonts.pixel_unicode_regular_12_xml.entry ).toFont();
 
 		// build sprite atlas directly from Aseprite file
-		tiles = dn.heaps.assets.Aseprite.convertToSLib(Const.FPS, hxd.Res.atlas.tiles.toAseprite());
+		gameTiles = dn.heaps.assets.Aseprite.convertToSLib(Const.FPS, hxd.Res.atlas.gameTiles.toAseprite());
 		hero = dn.heaps.assets.Aseprite.convertToSLib(Const.FPS, hxd.Res.atlas.player.toAseprite());
 
 		// CastleDB file hot reloading
@@ -83,7 +83,7 @@ class Assets {
 		if( Game.exists() && Game.ME.isPaused() )
 			tmod = 0;
 
-		tiles.tmod = tmod;
+		gameTiles.tmod = tmod;
 		hero.tmod = tmod;
 		// <-- add other atlas TMOD updates here
 	}
