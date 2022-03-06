@@ -49,7 +49,7 @@
 		{
 			"text": "📦 Redist",
 			"color": "lightgreen",
-			"command": "haxelib run redistHelper hl.dx.hxml -o redist -p InternBase -zip res -ignore backups",
+			"command": "haxelib run redistHelper hl.dx.hxml -o redist -p InternBase -zip -sign res -ignore backups",
 			"alignment": "right",
 			"skipTerminateQuickPick": false,
 			"priority": -50
