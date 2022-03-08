@@ -11,11 +11,6 @@ package sample;
 class SamplePlayer extends Entity {
 	var ca : ControllerAccess<GameAction>;
 	var walkSpeed = 0.;
-	var minFallY = 0.;
-
-	// This is TRUE if the player is not falling
-	var onGround(get,never) : Bool;
-		inline function get_onGround() return !destroyed && dy==0 && yr==1 && level.hasCollision(cx,cy+1);
 
 
 	public function new() {
@@ -29,7 +24,6 @@ class SamplePlayer extends Entity {
 		// Misc inits
 		frictX = 0.84;
 		frictY = 0.94;
-		minFallY = cy+yr;
 
 		// Camera tracks this
 		camera.trackEntity(this, true);
@@ -48,51 +42,21 @@ class SamplePlayer extends Entity {
 		ca.dispose(); // don't forget to dispose controller accesses
 	}
 
+	override function onLand(cHei:Float) {
+		super.onLand(cHei);
+		var heiPow = M.fclamp( cHei/5, 0, 1 ) ;
+		if( gameFeelFx )
+			setSquashY(0.9 - 0.4*heiPow);
 
-	override function setPosCase(x:Int, y:Int) {
-		super.setPosCase(x, y);
-		minFallY = cy+yr;
+		ca.rumble(0.25*heiPow, 0.06);
 	}
-
-	override function setPosPixel(x:Float, y:Float) {
-		super.setPosPixel(x, y);
-		minFallY = cy+yr;
-	}
-
 
 	/** X collisions **/
 	override function onPreStepX() {
 		super.onPreStepX();
 
-		// Right collision
-		if( xr>0.8 && level.hasCollision(cx+1,cy) )
-			xr = 0.8;
-
-		// Left collision
-		if( xr<0.2 && level.hasCollision(cx-1,cy) )
-			xr = 0.2;
 	}
 
-
-	/** Y collisions **/
-	override function onPreStepY() {
-		super.onPreStepY();
-
-		// Land on ground
-		if( yr>1 && level.hasCollision(cx,cy+1) ) {
-			var heiPow = M.fclamp( ( cy+yr - minFallY ) / 5, 0, 1 ) ;
-			if( gameFeelFx )
-				setSquashY(0.9 - 0.4*heiPow);
-			dy = 0;
-			yr = 1;
-			ca.rumble(0.2, 0.06);
-			onPosManuallyChangedY();
-		}
-
-		// Ceiling collision
-		if( yr<0.6 && level.hasCollision(cx,cy-1) )
-			yr = 0.6;
-	}
 
 
 	/**
@@ -127,14 +91,6 @@ class SamplePlayer extends Entity {
 
 
 	override function fixedUpdate() {
-		// Reset fall Y
-		if( dy<=0 || onGround )
-			minFallY = cy+yr;
-
-		// Gravity
-		if( !onGround )
-			dy+=0.05;
-
 		// Apply requested walk movement
 		if( walkSpeed!=0 ) {
 			var speed = 0.045;

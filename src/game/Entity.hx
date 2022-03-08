@@ -199,6 +199,14 @@ class Entity {
 
 	var actions : Array<{ id:String, cb:Void->Void, t:Float }> = [];
 
+	// This is TRUE if the player is not falling
+	var onGround(get,never) : Bool;
+		inline function get_onGround() return !destroyed && dy==0 && yr==1 && level.hasCollision(cx,cy+1);
+
+	var gravityPow = 1.;
+	var minFallY = 0.;
+
+
 
     public function new(x:Int, y:Int) {
         uid = Const.makeUniqueId();
@@ -208,6 +216,7 @@ class Entity {
 		ucd = new dn.Cooldown(Const.FPS);
         setPosCase(x,y);
 		initLife(1);
+		minFallY = cy+yr;
 
         spr = new HSprite(Assets.gameTiles);
 		Game.ME.scroller.add(spr, Const.DP_MAIN);
@@ -296,6 +305,7 @@ class Entity {
 		if( M.dist(attachX,attachY,prevFrameAttachX,prevFrameAttachY) > Const.GRID*2 ) {
 			prevFrameAttachX = attachX;
 			prevFrameAttachY = attachY;
+			minFallY = cy+yr;
 		}
 		updateLastFixedUpdatePos();
 	}
@@ -312,6 +322,7 @@ class Entity {
 		if( M.fabs(attachY-prevFrameAttachY) > Const.GRID*2 )
 			prevFrameAttachY = attachY;
 		lastFixedUpdateY = attachY;
+		minFallY = cy+yr;
 	}
 
 	/** Quickly set X/Y pivots. If Y is omitted, it will be equal to X. **/
@@ -724,10 +735,31 @@ class Entity {
 
 	/** Called at the beginning of each X movement step **/
 	function onPreStepX() {
+		// Right collision
+		if( xr>0.8 && level.hasCollision(cx+1,cy) )
+			xr = 0.8;
+
+		// Left collision
+		if( xr<0.2 && level.hasCollision(cx-1,cy) )
+			xr = 0.2;
+	}
+
+	function onLand(cHei:Float) {
 	}
 
 	/** Called at the beginning of each Y movement step **/
 	function onPreStepY() {
+		// Land on ground
+		if( yr>1 && level.hasCollision(cx,cy+1) ) {
+			onLand( M.fmax( 0, (cy+yr-minFallY) ) );
+			dy = 0;
+			yr = 1;
+			onPosManuallyChangedY();
+		}
+
+		// Ceiling collision
+		if( yr<0.6 && level.hasCollision(cx,cy-1) )
+			yr = 0.6;
 	}
 
 
@@ -736,6 +768,14 @@ class Entity {
 	**/
 	public function fixedUpdate() {
 		updateLastFixedUpdatePos();
+
+		// Reset fall Y
+		if( dy<=0 || onGround )
+			minFallY = cy+yr;
+
+		// Gravity
+		if( !onGround )
+			dy += 0.05 * gravityPow;
 
 		/*
 			Stepping: any movement greater than 33% of grid size (ie. 0.33) will increase the number of `steps` here. These steps will break down the full movement into smaller iterations to avoid jumping over grid collisions.
