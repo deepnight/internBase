@@ -3,6 +3,7 @@ bin/
 dump/
 docs/
 res/.tmp/
+backups
 
 # VScode
 .vscode/settings.json
