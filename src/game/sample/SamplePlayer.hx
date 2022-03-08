@@ -76,8 +76,8 @@ class SamplePlayer extends Entity {
 			if( gameFeelFx )
 				setSquashX(0.5);
 			cd.unset("recentlyOnGround");
-			if( gameFeelFx )
-				fx.dotsExplosionExample(centerX, centerY, 0xffcc00);
+			// if( gameFeelFx )
+			// 	fx.dotsExplosionExample(centerX, centerY, 0xffcc00);
 			ca.rumble(0.05, 0.06);
 		}
 

@@ -13,7 +13,10 @@ class Item extends Entity {
 		gravityPow = 0.5;
 		dy = -0.2;
 
-		spr.set(Assets.gameTiles, D.gameTiles.fxCircle15);
+		var t = Assets.worldData.getEnumTile(d.f_type);
+		t.setCenterRatio(0.5,1);
+		new h2d.Bitmap(t, spr);
+		spr.set(Assets.gameTiles, D.gameTiles.empty);
 	}
 
 
