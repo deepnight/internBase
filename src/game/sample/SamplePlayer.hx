@@ -9,12 +9,15 @@ package sample;
 **/
 
 class SamplePlayer extends Entity {
+	public static var ME : SamplePlayer = null;
 	var ca : ControllerAccess<GameAction>;
 	var walkSpeed = 0.;
 
 
 	public function new() {
 		super(5,5);
+
+		ME = this;
 
 		// Start point using level entity "PlayerStart"
 		var start = level.data.l_Entities.all_PlayerStart[0];
@@ -39,8 +42,11 @@ class SamplePlayer extends Entity {
 
 	override function dispose() {
 		super.dispose();
+		if( ME==this )
+			ME = null;
 		ca.dispose(); // don't forget to dispose controller accesses
 	}
+
 
 	override function onLand(cHei:Float) {
 		super.onLand(cHei);
@@ -50,13 +56,6 @@ class SamplePlayer extends Entity {
 
 		ca.rumble(0.25*heiPow, 0.06);
 	}
-
-	/** X collisions **/
-	override function onPreStepX() {
-		super.onPreStepX();
-
-	}
-
 
 
 	/**

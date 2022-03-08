@@ -745,17 +745,17 @@ class Entity {
 	}
 
 	function onLand(cHei:Float) {
+		dy = 0;
+		yr = 1;
+		onPosManuallyChangedY();
 	}
 
 	/** Called at the beginning of each Y movement step **/
 	function onPreStepY() {
 		// Land on ground
-		if( yr>1 && level.hasCollision(cx,cy+1) ) {
+		if( yr>1 && level.hasCollision(cx,cy+1) )
 			onLand( M.fmax( 0, (cy+yr-minFallY) ) );
-			dy = 0;
-			yr = 1;
-			onPosManuallyChangedY();
-		}
+
 
 		// Ceiling collision
 		if( yr<0.6 && level.hasCollision(cx,cy-1) )
