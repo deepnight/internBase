@@ -73,14 +73,13 @@ class Level extends dn.Process {
 		// Placeholder level render
 		root.removeChildren();
 
-		var t = Assets.worldData.all_tilesets.Tiles.getAtlasTile();
+		var t = Assets.worldData.all_tilesets.WorldTiles.getAtlasTile();
 		var tg = new h2d.TileGroup(t, root);
 
-		var layer = data.l_Collisions;
-		for( autoTile in layer.autoTiles ) {
-			var tile = layer.tileset.getAutoLayerTile(autoTile);
-			tg.add(autoTile.renderX, autoTile.renderY, tile);
-		}
+		data.l_Background.render(tg);
+		data.l_Collisions.render(tg);
+		data.l_Main.render(tg);
+		data.l_Front.render(tg);
 	}
 
 	override function postUpdate() {
