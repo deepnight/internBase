@@ -65,7 +65,8 @@ class Assets {
 
 		// LDtk file hot-reloading
 		var res = try hxd.Res.load(worldData.projectFilePath.substr(4)) catch(_) null; // assume the LDtk file is in "res/" subfolder
-		if( res!=null )
+		if( res!=null ) {
+			worldData.parseJson( res.entry.getText() );
 			res.watch( ()->{
 				// Only reload actual updated file from disk after a short delay, to avoid reading a file being written
 				App.ME.delayer.cancelById("ldtk");
@@ -75,6 +76,7 @@ class Assets {
 						Game.ME.onLdtkReload();
 				}, 0.2);
 			});
+		}
 	}
 
 
