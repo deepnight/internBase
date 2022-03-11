@@ -49,7 +49,7 @@
 		{
 			"text": "📦 Redist",
 			"color": "lightgreen",
-			"command": "haxelib run redistHelper hl.hxml -o redist -p Paint -zip -sign res -ignore backups,png",
+			"command": "haxelib run redistHelper hl.hxml js.hxml -o redist -p Paint -zip -sign res -ignore backups,png",
 			"alignment": "right",
 			"skipTerminateQuickPick": false,
 			"priority": -50
