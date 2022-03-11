@@ -37,6 +37,10 @@ class SamplePlayer extends Entity {
 		ca.lockCondition = Game.isGameControllerLocked;
 
 		spr.set(Assets.hero, D.hero.idle);
+		spr.anim.registerStateAnim("jumpDown", 1, ()->!onGround && dy>0);
+		spr.anim.registerStateAnim("jumpUp", 1, ()->!onGround && dy<=0);
+		spr.anim.registerStateAnim("jumpCharge", 1, ()->isChargingAction("jump"));
+		spr.anim.registerStateAnim(D.hero.idle, 0);
 	}
 
 
@@ -50,6 +54,8 @@ class SamplePlayer extends Entity {
 
 	override function onLand(cHei:Float) {
 		super.onLand(cHei);
+
+		spr.anim.play("land");
 		var heiPow = M.fclamp( cHei/5, 0, 1 ) ;
 		if( gameFeelFx )
 			setSquashY(0.9 - 0.4*heiPow);
@@ -72,20 +78,26 @@ class SamplePlayer extends Entity {
 
 		// Jump
 		if( cd.has("recentlyOnGround") && ca.isPressed(Jump) ) {
-			dy = -0.85;
-			if( gameFeelFx )
-				setSquashX(0.5);
-			cd.unset("recentlyOnGround");
-			// if( gameFeelFx )
-			// 	fx.dotsExplosionExample(centerX, centerY, 0xffcc00);
-			ca.rumble(0.05, 0.06);
+			dx*=0.8;
+			chargeAction("jump", 0.1, ()->{
+				dy = -0.85;
+				if( gameFeelFx )
+					setSquashX(0.5);
+				cd.unset("recentlyOnGround");
+				// if( gameFeelFx )
+				// 	fx.dotsExplosionExample(centerX, centerY, 0xffcc00);
+				ca.rumble(0.05, 0.06);
+			});
 		}
 
-		// Walk
-		if( ca.getAnalogDist(MoveX)>0 ) {
-			// As mentioned above, we don't touch physics values (eg. `dx`) here. We just store some "requested walk speed", which will be applied to actual physics in fixedUpdate.
-			walkSpeed = ca.getAnalogValue(MoveX); // -1 to 1
+		if( !isChargingAction() ) {
+			// Walk
+			if( ca.getAnalogDist(MoveX)>0 ) {
+				// As mentioned above, we don't touch physics values (eg. `dx`) here. We just store some "requested walk speed", which will be applied to actual physics in fixedUpdate.
+				walkSpeed = ca.getAnalogValue(MoveX); // -1 to 1
+			}
 		}
+
 	}
 
 
@@ -94,6 +106,7 @@ class SamplePlayer extends Entity {
 		if( walkSpeed!=0 ) {
 			var speed = 0.045;
 			dx += walkSpeed * speed;
+			dir = dx>0 ? 1 : dx<0 ? -1 : dir;
 		}
 
 		super.fixedUpdate();
